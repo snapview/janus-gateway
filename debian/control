@@ -1,0 +1,16 @@
+Source: janus
+Section: unknown
+Priority: optional
+Maintainer: Alexey Galakhov <agalakhov@snapview.de>
+Build-Depends: debhelper (>= 10), libavcodec-dev, libavformat-dev, libavutil-dev, libnice-dev, libwebsockets-dev, libconfig-dev, libjansson-dev, libsrtp2-dev, gengetopt, libogg-dev
+Standards-Version: 4.1.2
+Homepage: https://janus.conf.meetecho.com
+Vcs-Git: https://github.com/meetecho/janus-gateway.git
+Vcs-Browser: https://github.com/meetecho/janus-gateway/tree/unified-plan
+
+Package: janus
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Janus media server with unified-plan support
+ This is patched version of Janus supporting uinified-plan.
+ Please refer to https://github.com/meetecho/janus-gateway/pull/1459
