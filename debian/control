@@ -1,8 +1,8 @@
 Source: janus
-Section: unknown
+Section: net
 Priority: optional
 Maintainer: Alexey Galakhov <agalakhov@snapview.de>
-Build-Depends: debhelper (>= 10), libavcodec-dev, libavformat-dev, libavutil-dev, libnice-dev, libwebsockets-dev, libconfig-dev, libjansson-dev, libsrtp2-dev, gengetopt, libogg-dev
+Build-Depends: debhelper (>= 10), libavcodec-dev, libavformat-dev, libavutil-dev, libnice-dev (>= 0.1.16), libwebsockets-dev, libconfig-dev, libjansson-dev, libsrtp2-dev, gengetopt, libogg-dev
 Standards-Version: 4.1.2
 Homepage: https://janus.conf.meetecho.com
 Vcs-Git: https://github.com/meetecho/janus-gateway.git
