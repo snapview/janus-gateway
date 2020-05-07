@@ -1,3 +1,9 @@
+janus (0.9.3-1snapview1) unstable; urgency=low
+
+  * Version 0.9.3 of Janus
+
+ -- Alexey Galakhov <agalakhov@snapview.de>  Thu, 7 May 2020 18:06:11 +0200
+
 janus (0.7.6-uplan-2) unstable; urgency=high
 
   * Rebuild with libnice 0.1.16
