@@ -1,3 +1,9 @@
+janus (0.9.4-1snapview1) unstable; urgency=low
+
+  * Version 0.9.4 of Janus
+
+ -- Alexey Galakhov <agalakhov@snapview.de>  Fri, 8 May 2020 13:01:01 +0200
+
 janus (0.9.3-1snapview1) unstable; urgency=low
 
   * Version 0.9.3 of Janus
