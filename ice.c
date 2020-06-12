@@ -1417,6 +1417,7 @@ static void janus_ice_webrtc_free(janus_ice_handle *handle) {
 		janus_flags_clear(&handle->webrtc_flags, JANUS_ICE_HANDLE_WEBRTC_READY);
 		janus_flags_clear(&handle->webrtc_flags, JANUS_ICE_HANDLE_WEBRTC_CLEANING);
 		janus_flags_clear(&handle->webrtc_flags, JANUS_ICE_HANDLE_WEBRTC_HAS_AGENT);
+		janus_flags_clear(&handle->webrtc_flags, JANUS_ICE_HANDLE_WEBRTC_E2EE);
 		janus_mutex_unlock(&handle->mutex);
 		return;
 	}
@@ -1459,6 +1460,7 @@ static void janus_ice_webrtc_free(janus_ice_handle *handle) {
 	janus_flags_clear(&handle->webrtc_flags, JANUS_ICE_HANDLE_WEBRTC_READY);
 	janus_flags_clear(&handle->webrtc_flags, JANUS_ICE_HANDLE_WEBRTC_CLEANING);
 	janus_flags_clear(&handle->webrtc_flags, JANUS_ICE_HANDLE_WEBRTC_HAS_AGENT);
+	janus_flags_clear(&handle->webrtc_flags, JANUS_ICE_HANDLE_WEBRTC_E2EE);
 	if(!janus_flags_is_set(&handle->webrtc_flags, JANUS_ICE_HANDLE_WEBRTC_STOP) && handle->hangup_reason) {
 		janus_ice_notify_hangup(handle, handle->hangup_reason);
 	}
@@ -2539,6 +2541,10 @@ static void janus_ice_cb_nice_recv(NiceAgent *agent, guint stream_id, guint comp
 							stream->video_is_keyframe = &janus_vp9_is_keyframe;
 						else if(!strcasecmp(stream->video_codec, "h264"))
 							stream->video_is_keyframe = &janus_h264_is_keyframe;
+						else if(!strcasecmp(stream->video_codec, "av1"))
+							stream->video_is_keyframe = &janus_av1_is_keyframe;
+						else if(!strcasecmp(stream->video_codec, "h265"))
+							stream->video_is_keyframe = &janus_h265_is_keyframe;
 					}
 				}
 				/* Prepare the data to pass to the responsible plugin */
@@ -3362,7 +3368,16 @@ int janus_ice_setup_local(janus_ice_handle *handle, int offer, int audio, int vi
 	/* Any dynamic TURN credentials to retrieve via REST API? */
 	gboolean have_turnrest_credentials = FALSE;
 #ifdef HAVE_TURNRESTAPI
-	janus_turnrest_response *turnrest_credentials = janus_turnrest_request();
+	/* When using the TURN REST API, we use the handle's opaque_id as a username
+	 * by default, and fall back to the session_id when it's missing. Refer to this
+	 * issue for more context: https://github.com/meetecho/janus-gateway/issues/2199 */
+	char turnrest_username[20];
+	if(handle->opaque_id == NULL) {
+		janus_session *session = (janus_session *)handle->session;
+		g_snprintf(turnrest_username, sizeof(turnrest_username), "%"SCNu64, session->session_id);
+	}
+	janus_turnrest_response *turnrest_credentials = janus_turnrest_request((const char *)(handle->opaque_id ?
+		handle->opaque_id : turnrest_username));
 	if(turnrest_credentials != NULL) {
 		have_turnrest_credentials = TRUE;
 		JANUS_LOG(LOG_VERB, "[%"SCNu64"] Got credentials from the TURN REST API backend!\n", handle->handle_id);
@@ -4317,6 +4332,10 @@ static gboolean janus_ice_outgoing_traffic_handle(janus_ice_handle *handle, janu
 							stream->video_is_keyframe = &janus_vp9_is_keyframe;
 						else if(!strcasecmp(stream->video_codec, "h264"))
 							stream->video_is_keyframe = &janus_h264_is_keyframe;
+						else if(!strcasecmp(stream->video_codec, "av1"))
+							stream->video_is_keyframe = &janus_av1_is_keyframe;
+						else if(!strcasecmp(stream->video_codec, "h265"))
+							stream->video_is_keyframe = &janus_h265_is_keyframe;
 					}
 				}
 				/* Do we need to dump this packet for debugging? */
