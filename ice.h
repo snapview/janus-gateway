@@ -147,7 +147,7 @@ void janus_set_slowlink_threshold(uint packets);
  * @returns The current slowlink-threshold value */
 uint janus_get_slowlink_threshold(void);
 /*! \brief Method to modify the TWCC feedback period (i.e., how often TWCC feedback is sent back to media senders)
- * @param[in] timer The new period value, in milliseconds */
+ * @param[in] period The new period value, in milliseconds */
 void janus_set_twcc_period(uint period);
 /*! \brief Method to get the current TWCC period (see above)
  * @returns The current TWCC period */
@@ -632,15 +632,19 @@ void janus_ice_send_remb(janus_ice_handle *handle, uint32_t bitrate);
 /*! \brief Plugin SCTP/DataChannel callback, called by the SCTP stack when when there's data for a plugin
  * @param[in] handle The Janus ICE handle associated with the peer
  * @param[in] label The label of the data channel the message is from
+ * @param[in] protocol The protocol of the data channel to use
  * @param[in] textdata Whether the buffer is text (domstring) or binary data
  * @param[in] buffer The message data (buffer)
- * @param[in] length The buffer lenght */
-void janus_ice_incoming_data(janus_ice_handle *handle, char *label, gboolean textdata, char *buffer, int length);
+ * @param[in] length The buffer length */
+void janus_ice_incoming_data(janus_ice_handle *handle, char *label, char *protocol, gboolean textdata, char *buffer, int length);
 /*! \brief Core SCTP/DataChannel callback, called by the SCTP stack when when there's data to send.
  * @param[in] handle The Janus ICE handle associated with the peer
  * @param[in] buffer The message data (buffer)
- * @param[in] length The buffer lenght */
+ * @param[in] length The buffer length */
 void janus_ice_relay_sctp(janus_ice_handle *handle, char *buffer, int length);
+/*! \brief Plugin SCTP/DataChannel callback, called by the SCTP stack when data can be written
+ * @param[in] handle The Janus ICE handle associated with the peer */
+void janus_ice_notify_data_ready(janus_ice_handle *handle);
 ///@}
 
 
